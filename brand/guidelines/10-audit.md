@@ -15,7 +15,7 @@ What the current feed does, judged from 17 recent posts (Tax-Smart, Strong Ideas
 
 | Problem | Where you see it | Fix in this system |
 | --- | --- | --- |
-| Gold is unreadable on white. The ochre/orange gradient measures about 2.3:1 against white; it fails even the large-text minimum. | TAX-SMART, LAUNCH, TRUTH, Costly | Use the logo's own gold, #7c6527 (5.6:1 on white), and #d4b36a on navy (7.1:1). One gold word per post. The posts' ochre doesn't even match the logo. |
+| Gold is unreadable on white. The ochre/orange gradient measures about 2.3:1 against white; it fails even the large-text minimum. | TAX-SMART, LAUNCH, TRUTH, Costly | Keep a gold gradient, but rebuild it from the logo gold (#5c4812 → #9a7d33 → #7c6527) so every stop stays readable, with a lighter set on navy. One gold word per post. The posts' ochre doesn't even match the logo. |
 | Too many type treatments per post: light italic + heavy caps + gold gradient + tag + tiny italic + script. | Truth About, Documents, Love Story | Max three styles. One family (Urbanist). |
 | Body copy is far too small, about 16–18px on a 1080 canvas (~6pt on a phone). | Closing your business, Strong Ideas, February | Nothing under 24px. Body 30px. |
 | Headline position drifts: centred, left, upper third, middle. The grid reads as nine different templates. | Whole grid | Left-aligned headline at a fixed top line. Centre only for Navy greetings. |

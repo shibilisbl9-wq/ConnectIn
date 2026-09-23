@@ -19,10 +19,12 @@ Rules:
 
 - Headline keyword in `headline` (navy) or `gold`. Secondary emphasis word in `blue`. Body in `ink`, meta in `ink-muted`.
 - **One gold word per post.** Gold is the reward, not the paint.
-- On Daylight, `gold` is the logo gold itself: 5.6:1 on white, readable at any size. On Navy it lifts to #d4b36a (7.1:1), because the logo gold is only 2.6:1 on navy. The old bright ochre (#d9a441, 2.3:1 on white) and the orange-to-yellow gradient are retired: they don't match the logo either.
+- **Headline gold is a gradient**: `gold-grad-1` (shadow) → `gold-grad-2` (highlight band) → `gold-grad-3` (logo gold), at 165°, clipped to the letters. It applies to the gold keyword, the gold word in a title, gold numerals, fact-chip numbers, the gold rule and the tag on Navy.
+- Every gradient stop stays readable: on Daylight the lightest stop is 3.9:1 on white (3.4:1 on mist), so gradient gold is for display sizes only (48px+ on the canvas); on Navy the stops run 5.1–10.6:1. The old orange-to-yellow gradient failed because its light stops dropped to about 2:1 and it didn't match the logo; this one is built from the logo gold.
+- At text sizes (labels, the swipe arrow) gold is flat `gold`: the logo gold on Daylight (5.6:1), #d4b36a on Navy (7.1:1).
 - `signal` red only marks a warning (the X on "7 Costly Mistakes", a deadline) and always sits next to a word. No red petals, hearts or decorative red.
 - `gold-leaf` is for shapes: the pointer triangle, rules, blocks. Never text on a light ground.
-- No gradients except one: `surface-mist` fading to `surface` behind a hero image (top → bottom). No blue-purple, no metallic text.
+- Only two gradients exist: the gold gradient above, and `surface-mist` fading to `surface` behind a hero image (top → bottom). No other gradients, no blue-purple, no bevels, glows or drop shadows on gold.
 
 ## Typography
 

@@ -9,10 +9,17 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ci-stack--center { align-items: center; text-align: center; }
 .ci-lead { margin: 0; font-size: 68px; line-height: 1.05; font-weight: 300; font-style: italic; letter-spacing: -0.01em; color: var(--ink); }
 .ci-keyword { margin: 0; font-size: 124px; line-height: .9; font-weight: 800; letter-spacing: -0.02em; text-transform: uppercase; color: var(--headline); }
-.ci-keyword--gold { color: var(--gold); }
+.ci-keyword--gold, .ci-title em, .ci-numeral--gold, .ci-fact b { color: var(--gold); }
+/* Gold gradient: dark shadow, a highlight band, logo gold. Display sizes only (48px+ on the canvas). */
+@supports (-webkit-background-clip: text) or (background-clip: text) {
+  .ci-keyword--gold, .ci-title em, .ci-numeral--gold, .ci-fact b {
+    background-image: linear-gradient(165deg, var(--gold-grad-1) 0%, var(--gold-grad-2) 48%, var(--gold-grad-3) 100%);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent;
+  }
+}
 .ci-keyword--blue { color: var(--blue); }
 .ci-title { margin: 0; font-size: 88px; line-height: .98; font-weight: 800; letter-spacing: -0.02em; color: var(--headline); text-wrap: balance; }
-.ci-title em { font-style: normal; color: var(--gold); }
+.ci-title em { font-style: normal; }
 .ci-stack .ci-tag { margin-top: var(--space-2); }
 
 /* Key tag */
@@ -25,7 +32,6 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 
 /* Numeral */
 .ci-numeral { margin: 0; font-family: var(--font-sans); font-size: 300px; line-height: .8; font-weight: 900; letter-spacing: -0.04em; color: var(--headline); }
-.ci-numeral--gold { color: var(--gold); }
 
 /* Label / counter */
 .ci-label { margin: 0; font-family: var(--font-sans); font-size: 24px; line-height: 1.2; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--gold); }
@@ -36,7 +42,7 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 
 /* Fact chip: one number, one promise, on navy */
 .ci-fact { display: inline-flex; align-items: baseline; gap: var(--space-3); padding: var(--space-3) var(--space-6); border-radius: var(--radius-tag); background: var(--surface-deep); color: var(--on-deep); font-family: var(--font-sans); }
-.ci-fact b { font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; color: var(--gold-leaf); white-space: nowrap; }
+.ci-fact b { font-size: 56px; line-height: 1; font-weight: 800; letter-spacing: -0.02em; white-space: nowrap; }
 .ci-fact span { font-size: 28px; line-height: 1.25; font-weight: 500; max-width: 360px; }
 
 /* Warning mark */
@@ -69,3 +75,9 @@ body { margin: 0; font-family: var(--font-sans); background: var(--surface); col
 .ci-post__main--tight { gap: var(--space-6); }
 .ci-list { display: flex; flex-direction: column; gap: var(--space-3); }
 .ci-list .ci-pointer { max-width: 760px; font-weight: 500; }
+
+/* Gold fills get the same gradient: the tag on Navy and the gold rule. */
+[data-theme="navy"] .ci-tag, [data-theme="navy"].ci-tag { background-image: linear-gradient(165deg, var(--gold-grad-1) 0%, var(--gold-grad-2) 48%, var(--gold-grad-3) 100%); }
+.ci-rule { background-image: linear-gradient(90deg, var(--gold-grad-1), var(--gold-grad-2), var(--gold-grad-3)); }
+/* The fact chip is always a navy panel, so it always takes the Navy-theme gold stops. */
+.ci-fact { --gold: #d4b36a; --gold-grad-1: #b8964f; --gold-grad-2: #f3dc9c; --gold-grad-3: #c9a55a; }
