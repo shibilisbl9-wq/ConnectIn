@@ -8,17 +8,18 @@ The system keeps what already works on the page (navy + gold, a light-italic / h
 
 ## Colour
 
+The palette starts from the three inks in the logo file: **navy #032d47** (`brand-navy`), **gold #7c6527** (`brand-gold`) and **grey #606060** (`brand-grey`). Everything else is a step of those.
+
 Two themes, same tokens.
 
 - **Daylight** (`surface` white, `surface-mist` wash) is the default for advisory and carousel posts — roughly 3 in every 4 posts.
-- **Navy** (`surface` #0e2442) is for announcements, seasonal greetings, milestones and closing slides — the New Year post is the model. Keep it to 1 in every 4 so it stays special.
+- **Navy** (`surface` #032d47, the logo navy) is for announcements, seasonal greetings, milestones and closing slides — the New Year post is the model. Keep it to 1 in every 4 so it stays special.
 
 Rules:
 
 - Headline keyword in `headline` (navy) or `gold`. Secondary emphasis word in `blue`. Body in `ink`, meta in `ink-muted`.
 - **One gold word per post.** Gold is the reward, not the paint.
-- On Daylight, `gold` is display-only (48px+ on the canvas). For gold at text size use `gold-text`. The old flat ochre (#d9a441, 2.3:1 on white) and the orange-to-yellow gradient are retired.
-- Gold reads best on navy (9:1). When a post is gold-heavy, make it a Navy post.
+- On Daylight, `gold` is the logo gold itself: 5.6:1 on white, readable at any size. On Navy it lifts to #d4b36a (7.1:1), because the logo gold is only 2.6:1 on navy. The old bright ochre (#d9a441, 2.3:1 on white) and the orange-to-yellow gradient are retired: they don't match the logo either.
 - `signal` red only marks a warning (the X on "7 Costly Mistakes", a deadline) and always sits next to a word. No red petals, hearts or decorative red.
 - `gold-leaf` is for shapes: the pointer triangle, rules, blocks. Never text on a light ground.
 - No gradients except one: `surface-mist` fading to `surface` behind a hero image (top → bottom). No blue-purple, no metallic text.
@@ -44,8 +45,8 @@ Rules:
 
 Canvas is **1080 × 1350 (4:5)**. Profile grid shows a 3:4 crop, so `margin` (96px) is the safe edge on all sides.
 
-- **Header band** (`header-band`, 176px): logo top-left at the margin. The top-right corner stays empty — Instagram's carousel icon covers it, which is why the handle text there is unreadable today.
-- **Headline zone**: left-aligned to the margin, top of the zone at 224px. Left alignment gives every post the same spine, so the 9-grid reads as one brand instead of nine layouts. Centre alignment is reserved for Navy greetings.
+- **Header band** (`header-band`, 240px): logo top-left at the margin. The top-right corner stays empty — Instagram's carousel icon covers it, which is why the handle text there is unreadable today.
+- **Headline zone**: left-aligned to the margin, top of the zone at 272px. Left alignment gives every post the same spine, so the 9-grid reads as one brand instead of nine layouts. Centre alignment is reserved for Navy greetings.
 - **Image zone**: lower 55% of the canvas, subject cut out on `surface-mist`, allowed to bleed off the bottom or right edge.
 - **Footer band** (`footer-band`): website bottom-left in `caption`, swipe cue bottom-right. Handle lives in the caption, not on the image.
 
@@ -63,7 +64,8 @@ See *Post templates* for the three layouts and their grids.
 - **One list/pointer marker**: the gold `gold-leaf` right-pointing triangle (▸). Retire », >>> and mixed chevrons.
 - **Swipe cue**: "Swipe" + arrow in a pill, `ink-muted`, bottom-right. Drop the hand icon.
 - Numbers: when a post is a count ("7 Costly Mistakes"), the number is a `numeral` shape, not an image.
-- Logo: use the official ConnectIn logo file (capsule mark over the *connectin* wordmark with gold "in", *BUSINESS SERVICES* beneath). It is **not in this system yet** — add the SVG under Logos. Minimum width on the canvas 200px; below that the *BUSINESS SERVICES* line cannot be read.
+- **Logo**: always the official artwork from Logos, never retyped. `connectin-logo.png` on white and mist; `connectin-logo-reversed.png` on navy. 260px wide on the 1080 canvas, top-left at the margin, top 72px. Keep clear space of at least the capsule mark's height. Never recolour, stretch, outline or put the standard version on navy or a busy photo.
+- The logo's capsule speech bubble is the brand's own shape. The key tag and fact chip use the same rounded-rectangle language (`radius-tag`); don't introduce circles or sharp boxes beside it.
 
 ## Voice
 

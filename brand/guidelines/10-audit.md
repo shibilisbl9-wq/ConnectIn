@@ -15,7 +15,7 @@ What the current feed does, judged from 17 recent posts (Tax-Smart, Strong Ideas
 
 | Problem | Where you see it | Fix in this system |
 | --- | --- | --- |
-| Gold is unreadable on white. The ochre/orange gradient measures about 2.3:1 against white; it fails even the large-text minimum. | TAX-SMART, LAUNCH, TRUTH, Costly | `gold` #a87a1f for display on white (3.8:1), `gold-text` for small, or put gold on navy (9:1). One gold word per post. |
+| Gold is unreadable on white. The ochre/orange gradient measures about 2.3:1 against white; it fails even the large-text minimum. | TAX-SMART, LAUNCH, TRUTH, Costly | Use the logo's own gold, #7c6527 (5.6:1 on white), and #d4b36a on navy (7.1:1). One gold word per post. The posts' ochre doesn't even match the logo. |
 | Too many type treatments per post: light italic + heavy caps + gold gradient + tag + tiny italic + script. | Truth About, Documents, Love Story | Max three styles. One family (Urbanist). |
 | Body copy is far too small, about 16–18px on a 1080 canvas (~6pt on a phone). | Closing your business, Strong Ideas, February | Nothing under 24px. Body 30px. |
 | Headline position drifts: centred, left, upper third, middle. The grid reads as nine different templates. | Whole grid | Left-aligned headline at a fixed top line. Centre only for Navy greetings. |
@@ -25,7 +25,7 @@ What the current feed does, judged from 17 recent posts (Tax-Smart, Strong Ideas
 | Generic imagery: target and arrows, businessman in an armchair, crowd of faceless mannequins. They say "stock", not "Dubai specialist". | February, Launch, Truth | Real team, real documents, real Dubai. AI images checked for artefacts. |
 | Faint ghost text in the background (LAUNCH, STRONG) competes with the headline and reads as a rendering error at small size. | Launch, Strong Ideas | Retire background ghost words. Use `surface-mist` and space instead. |
 | Inconsistent casing: "What kind of Documents You need in Dubai". | Documents, Truth | Sentence case for lead-ins; caps only for keyword and tag. |
-| Logo is small; "BUSINESS SERVICES" under it is illegible in the feed. | Every post | Logo min 200px wide on canvas. |
+| Logo is small; "BUSINESS SERVICES" under it is illegible in the feed. The post colours (bright blue, orange-gold) drift from the logo's navy #032d47 and gold #7c6527. | Every post | Official logo at 260px wide; palette rebuilt from the logo's inks. |
 
 ## Honest summary
 
