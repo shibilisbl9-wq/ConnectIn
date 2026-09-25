@@ -1,0 +1,235 @@
+{
+  "images": {
+    "img-1-skyline.png": [
+      "7e11b0f8-3623-41fb-b6c8-d00a19c27a6b",
+      "Dubai skyline in morning haze"
+    ],
+    "img-2-fork.png": [
+      "0c6a98d4-9e9b-48ac-a38f-cc38d4063ba3",
+      "Aerial highway splitting two ways"
+    ],
+    "img-3-bank.png": [
+      "43535652-991a-4dc0-a78b-704e981c6d82",
+      "Blank card and folder on marble, bank interior"
+    ],
+    "img-4-scale.png": [
+      "6ea14b77-2283-451d-a2bd-6954b68b639b",
+      "Brass balance scale with two white cubes"
+    ],
+    "img-5-tower.png": [
+      "ffedbe98-745e-4cb1-94cb-df41e191695c",
+      "Single glass office tower, pale sky"
+    ]
+  },
+  "posts": [
+    {
+      "id": "P01",
+      "date": "2026-10-05",
+      "format": "Carousel",
+      "pillar": "Process",
+      "topic": "Four-week setup plan",
+      "caption": "Start in October, trade by November. Here is the four-week plan we use for a free zone setup, step by step.\n\nSave it for when you are ready, and send it to the co-founder who keeps asking \"how long will it take?\"\n\nWant it done for you? DM us \"OCTOBER\".\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel: four-week Dubai company setup plan. Week one decide, weeks one to two licence, weeks two to three visas, weeks three to four bank account and corporate tax registration.",
+      "slides": [
+        "P01-01.html",
+        "P01-02.html",
+        "P01-03.html",
+        "P01-04.html",
+        "P01-05.html",
+        "P01-06.html",
+        "P01-07.html"
+      ],
+      "images": [
+        "img-1-skyline.png"
+      ]
+    },
+    {
+      "id": "P02",
+      "date": "2026-10-07",
+      "format": "Static",
+      "pillar": "Compliance alert",
+      "topic": "E-invoicing ASP deadline",
+      "caption": "E-invoicing is coming to the UAE, and the first deadline is this month.\n\nIf your revenue is AED 50 million or more, you need an Accredited Service Provider (ASP) appointed by 30 October 2026. Mandatory e-invoicing for large businesses starts 1 January 2027. Everyone else: appoint by 31 March 2027, go live 1 July 2027.\n\nNot sure which group you are in? DM us \"INVOICE\" and we will check.\n\n#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #ConnectIn",
+      "alt": "Navy post: revenue of AED 50 million or more, appoint an e-invoicing Accredited Service Provider by 30 October 2026. Mandatory e-invoicing starts 1 January 2027. Smaller businesses: ASP by 31 March 2027.",
+      "slides": [
+        "P02-01.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P03",
+      "date": "2026-10-08",
+      "format": "Carousel",
+      "pillar": "Decision guide",
+      "topic": "Mainland or free zone",
+      "caption": "Mainland or free zone? It comes down to who your customers are and where you need to operate.\n\nSwipe through the four questions, then check the summary on slide 6. Save it before you speak to anyone about packages.\n\nStill unsure? DM us \"CHOOSE\" with what you sell and to whom.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel comparing mainland and free zone company setup in the UAE across customers, shopfront and government work, office space and visas, and corporate tax.",
+      "slides": [
+        "P03-01.html",
+        "P03-02.html",
+        "P03-03.html",
+        "P03-04.html",
+        "P03-05.html",
+        "P03-06.html",
+        "P03-07.html"
+      ],
+      "images": [
+        "img-2-fork.png"
+      ]
+    },
+    {
+      "id": "P04",
+      "date": "2026-10-12",
+      "format": "Static",
+      "pillar": "Checklist",
+      "topic": "Documents checklist",
+      "caption": "The documents you will be asked for, in one place. Save this and start collecting today: missing paperwork is the most common reason a setup stalls.\n\nEvery authority has its own list, so treat this as the starting point. DM us \"DOCS\" and we will send the exact list for your free zone.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Checklist post: documents for a free zone company setup. Passport copies, passport photo, visa or Emirates ID, no-objection letter if employed in the UAE, business plan for some activities.",
+      "slides": [
+        "P04-01.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P05",
+      "date": "2026-10-14",
+      "format": "Carousel",
+      "pillar": "Pain point",
+      "topic": "Opening a business bank account",
+      "caption": "Opening a business bank account is where most new companies lose weeks. Here is what the bank is really checking, and what to have ready.\n\nSend this to your co-founder before the bank meeting.\n\nDM us \"BANK\" and we will review your file first.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel: documents UAE banks ask for when opening a business account, grouped into company documents, proof of business activity and source of funds.",
+      "slides": [
+        "P05-01.html",
+        "P05-02.html",
+        "P05-03.html",
+        "P05-04.html",
+        "P05-05.html",
+        "P05-06.html",
+        "P05-07.html"
+      ],
+      "images": [
+        "img-3-bank.png"
+      ]
+    },
+    {
+      "id": "P06",
+      "date": "2026-10-15",
+      "format": "Static",
+      "pillar": "Compliance alert",
+      "topic": "Corporate tax return due 31 Oct",
+      "caption": "Corporate tax reminder: if your financial year ended on 31 January 2026, your return and payment are due by 31 October 2026.\n\nThe rule is nine months after your year end, for both filing and payment. Late filing costs AED 500 a month to start, and interest runs on unpaid tax.\n\nYear end on 31 March? You have until 31 December. Unsure of yours? DM us \"TAX\".\n\n#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #ConnectIn",
+      "alt": "Navy post: financial year ended 31 January 2026, corporate tax return and payment due 31 October 2026. Late filing penalty from AED 500 per month.",
+      "slides": [
+        "P06-01.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P07",
+      "date": "2026-10-19",
+      "format": "Carousel",
+      "pillar": "Transparency",
+      "topic": "What a company really costs",
+      "caption": "\"From AED X\" is never the whole story. Here is every cost of a Dubai company, grouped the way you will actually pay them.\n\nSave this and hold every quote against it, ours included.\n\nDM us \"COST\" for a line-by-line quote.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel listing the full costs of a Dubai company: one-time setup fees, per-visa costs, workspace, and annual costs such as renewal, bookkeeping, tax filing, audit and VAT.",
+      "slides": [
+        "P07-01.html",
+        "P07-02.html",
+        "P07-03.html",
+        "P07-04.html",
+        "P07-05.html",
+        "P07-06.html",
+        "P07-07.html"
+      ],
+      "images": [
+        "img-4-scale.png"
+      ]
+    },
+    {
+      "id": "P08",
+      "date": "2026-10-21",
+      "format": "Static",
+      "pillar": "Myth vs fact",
+      "topic": "Free zone does not mean zero tax",
+      "caption": "\"Set up in a free zone and pay no tax.\" It is one of the most common assumptions, and it is only true in specific cases.\n\nThe 0% rate is for qualifying income of a Qualifying Free Zone Person that meets every condition. Miss one and the standard 9% applies above AED 375,000 of profit.\n\nDM us \"ZONE TAX\" and we will tell you which side of the line you are on.\n\n#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #ConnectIn",
+      "alt": "Myth versus fact post: free zone does not automatically mean zero tax. The 0% rate applies only to qualifying income when every condition is met; otherwise 9% applies above AED 375,000 of profit.",
+      "slides": [
+        "P08-01.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P09",
+      "date": "2026-10-22",
+      "format": "Carousel",
+      "pillar": "Process",
+      "topic": "First 90 days after the licence",
+      "caption": "Getting the licence feels like the finish line. It is the start of a 90-day checklist.\n\nCorporate tax registration within 3 months of incorporation (AED 10,000 if late), VAT once you pass AED 375,000, visas, bank and records. Save this.\n\nDM us \"90DAYS\" and we will run it with you.\n\n#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #ConnectIn",
+      "alt": "Carousel: five things to do in the first 90 days after getting a UAE trade licence. Bank account, corporate tax registration within 3 months, VAT threshold of AED 375,000, visas, and seven-year record keeping.",
+      "slides": [
+        "P09-01.html",
+        "P09-02.html",
+        "P09-03.html",
+        "P09-04.html",
+        "P09-05.html",
+        "P09-06.html",
+        "P09-07.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P10",
+      "date": "2026-10-26",
+      "format": "Carousel",
+      "pillar": "Decision guide",
+      "topic": "Six questions before choosing a free zone",
+      "caption": "Six questions to ask before you choose a free zone. The package price is the easy part; these are what decide whether it still works in year two.\n\nSave this for your shortlist calls.\n\nDM us \"ZONE\" and we will compare them for you.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel: six questions to ask before choosing a UAE free zone: permitted activities, visas included, flexi-desk or office, annual audit, mainland clients, and renewal cost.",
+      "slides": [
+        "P10-01.html",
+        "P10-02.html",
+        "P10-03.html",
+        "P10-04.html",
+        "P10-05.html",
+        "P10-06.html",
+        "P10-07.html",
+        "P10-08.html"
+      ],
+      "images": [
+        "img-5-tower.png"
+      ]
+    },
+    {
+      "id": "P11",
+      "date": "2026-10-28",
+      "format": "Static",
+      "pillar": "Compliance alert",
+      "topic": "Deadlines to save",
+      "caption": "Three dates to put in the calendar now: 30 October, 31 October and 31 December.\n\nSave this post, and send it to whoever handles your company's filings.\n\nDM us \"DEADLINES\" and we will check which ones apply to you.\n\n#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #ConnectIn",
+      "alt": "Navy post listing UAE deadlines: 30 October e-invoicing ASP appointment for revenue of AED 50 million or more; 31 October corporate tax for years ended 31 January; 31 December for years ended 31 March.",
+      "slides": [
+        "P11-01.html"
+      ],
+      "images": []
+    },
+    {
+      "id": "P12",
+      "date": "2026-10-29",
+      "format": "Carousel",
+      "pillar": "Trust",
+      "topic": "Five questions to ask any setup consultant",
+      "caption": "Five questions to ask any business setup consultant before you sign. Including us.\n\nIf the answers are vague, keep looking. Save this for your calls.\n\nDM us \"ASK\" and we will answer all five in writing.\n\n#DubaiBusinessSetup #UAEBusiness #StartABusinessInDubai #DubaiEntrepreneurs #FreeZoneUAE #ConnectIn",
+      "alt": "Carousel: five questions to ask a Dubai business setup consultant: is the quote all-inclusive, who owns the documents, what happens if the bank declines, who handles year two, and is there a written timeline.",
+      "slides": [
+        "P12-01.html",
+        "P12-02.html",
+        "P12-03.html",
+        "P12-04.html",
+        "P12-05.html",
+        "P12-06.html",
+        "P12-07.html"
+      ],
+      "images": []
+    }
+  ]
+}

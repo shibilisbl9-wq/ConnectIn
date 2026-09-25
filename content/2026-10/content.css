@@ -1,0 +1,49 @@
+/* October 2026 content layouts. Builds on brand/components/bundle.css; canvas px (1080 x 1350). */
+
+/* Photo panel: the Higgsfield image is cropped to fill it. */
+.ci-post__image { overflow: hidden; }
+.ci-post__image img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.ci-post__image--missing { border: 3px dashed var(--line); }
+.ci-post__image--missing span { padding: 0 48px; text-align: center; line-height: 1.5; }
+
+/* Slide counter sits where the logo sits on the cover. */
+.ci-counter { font-variant-numeric: tabular-nums; }
+
+/* Mainland / free zone comparison */
+.ci-compare { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); width: 100%; }
+.ci-compare__col { border-radius: var(--radius-panel); background: var(--surface-mist); padding: var(--space-6) 40px; display: flex; flex-direction: column; gap: var(--space-2); }
+.ci-compare__col h3 { margin: 0; font-size: 24px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); }
+.ci-compare__col p { margin: 0; font-size: 30px; line-height: 1.35; font-weight: 500; color: var(--ink); }
+.ci-compare__col--pick { background: var(--surface-deep); }
+.ci-compare__col--pick h3 { color: #d4b36a; }
+.ci-compare__col--pick p { color: var(--on-deep); }
+
+/* Summary table */
+.ci-table { width: 100%; border-collapse: collapse; font-size: 28px; line-height: 1.3; }
+.ci-table th { text-align: left; padding: 0 0 16px; font-size: 22px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); }
+.ci-table td { padding: 20px 16px 20px 0; border-top: 2px solid var(--line); vertical-align: top; font-weight: 500; color: var(--ink); }
+.ci-table td:first-child { font-weight: 700; color: var(--headline); width: 30%; }
+
+/* Deadline rows: date tag + sentence */
+.ci-dates { display: flex; flex-direction: column; gap: var(--space-4); width: 100%; }
+.ci-date { display: grid; grid-template-columns: 220px 1fr; gap: var(--space-4); align-items: start; }
+.ci-date .ci-tag { font-size: 30px; text-align: center; padding-block: 12px; }
+.ci-date p { margin: 0; font-size: 30px; line-height: 1.35; font-weight: 500; color: var(--ink); }
+.ci-date p b { font-weight: 700; }
+
+/* Call-to-action box on closing slides */
+.ci-dm { display: inline-flex; flex-direction: column; gap: 8px; padding: var(--space-4) var(--space-6); border: 2px solid var(--line); border-radius: var(--radius-panel); }
+.ci-dm span { font-size: 24px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-muted); }
+.ci-dm b { font-size: 72px; line-height: 1; font-weight: 800; letter-spacing: -0.01em; }
+
+/* Small print for sourced facts */
+.ci-source { margin: 0; font-size: 24px; line-height: 1.35; font-weight: 500; color: var(--ink-muted); max-width: 760px; }
+.ci-dm b { color: var(--gold); background-image: linear-gradient(165deg, var(--gold-grad-1) 0%, var(--gold-grad-2) 48%, var(--gold-grad-3) 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+
+/* Layouts that use the whole canvas instead of leaving the bottom half empty. */
+.ci-post__main--split, .ci-post__main--centerv { bottom: 190px; justify-content: space-between; }
+.ci-post__main--centerv { justify-content: center; }
+.ci-post__main--inner { top: 200px; }
+.ci-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); width: 100%; }
+.ci-group--top { gap: var(--space-8); }
+.ci-keyword--long { font-size: 104px; }
