@@ -21,6 +21,20 @@
       "Single glass office tower, pale sky"
     ]
   },
+  "models": {
+    "model-1-businessman.png": [
+      "94e10a80-8c62-4b6e-951a-cf98d3d6aa83",
+      "Businessman in navy suit, walking, full length"
+    ],
+    "model-2-emirati.png": [
+      "5adb758c-e65a-48aa-a418-33eb0bc4e4bc",
+      "Emirati businessman in white kandura, full length"
+    ],
+    "model-3-consultant.png": [
+      "dd5a2ad8-62c3-43b8-b804-6be15f851381",
+      "Consultant in navy blazer and hijab, arms crossed"
+    ]
+  },
   "posts": [
     {
       "id": "P01",
@@ -41,6 +55,9 @@
       ],
       "images": [
         "img-1-skyline.png"
+      ],
+      "models": [
+        "model-1-businessman.png"
       ]
     },
     {
@@ -54,7 +71,8 @@
       "slides": [
         "P02-01.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P03",
@@ -75,6 +93,9 @@
       ],
       "images": [
         "img-2-fork.png"
+      ],
+      "models": [
+        "model-2-emirati.png"
       ]
     },
     {
@@ -88,7 +109,8 @@
       "slides": [
         "P04-01.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P05",
@@ -109,7 +131,8 @@
       ],
       "images": [
         "img-3-bank.png"
-      ]
+      ],
+      "models": []
     },
     {
       "id": "P06",
@@ -122,7 +145,8 @@
       "slides": [
         "P06-01.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P07",
@@ -143,7 +167,8 @@
       ],
       "images": [
         "img-4-scale.png"
-      ]
+      ],
+      "models": []
     },
     {
       "id": "P08",
@@ -156,7 +181,8 @@
       "slides": [
         "P08-01.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P09",
@@ -175,7 +201,8 @@
         "P09-06.html",
         "P09-07.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P10",
@@ -197,7 +224,8 @@
       ],
       "images": [
         "img-5-tower.png"
-      ]
+      ],
+      "models": []
     },
     {
       "id": "P11",
@@ -210,7 +238,8 @@
       "slides": [
         "P11-01.html"
       ],
-      "images": []
+      "images": [],
+      "models": []
     },
     {
       "id": "P12",
@@ -229,7 +258,10 @@
         "P12-06.html",
         "P12-07.html"
       ],
-      "images": []
+      "images": [],
+      "models": [
+        "model-3-consultant.png"
+      ]
     }
   ]
 }

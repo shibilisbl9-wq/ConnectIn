@@ -47,3 +47,17 @@
 .ci-group { display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-6); width: 100%; }
 .ci-group--top { gap: var(--space-8); }
 .ci-keyword--long { font-size: 104px; }
+
+/* Cut-out model standing in front of the photo panel, feet or thighs cropped by the canvas edge. */
+.ci-post__model { position: absolute; bottom: 0; display: flex; align-items: flex-end; justify-content: center; }
+.ci-post__model img { display: block; height: 100%; width: auto; filter: drop-shadow(0 24px 40px rgba(3, 45, 71, .22)); }
+.ci-post__model--full { right: 40px; width: 520px; height: 780px; }
+.ci-post__model--half { right: 0; width: 500px; height: 760px; }
+.ci-post__model--missing { border: 3px dashed var(--line); border-bottom: 0; border-radius: 280px 280px 0 0; background: rgba(3, 45, 71, .04); align-items: center; }
+.ci-post__model--missing span { padding: 0 56px; text-align: center; font-size: 22px; line-height: 1.5; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-muted); }
+.ci-post--has-model .ci-post__main .ci-pointer { max-width: 400px; }
+.ci-post--has-model .ci-post__main .ci-group:not(.ci-group--top) { max-width: 440px; }
+.ci-post__image--missing { align-items: start; padding-top: 48px; box-sizing: border-box; }
+.ci-post__foot { z-index: 2; }
+.ci-post--has-model .ci-post__foot { justify-content: flex-start; gap: var(--space-4); }
+.ci-post__model--missing { align-items: flex-end; padding-bottom: 150px; box-sizing: border-box; }

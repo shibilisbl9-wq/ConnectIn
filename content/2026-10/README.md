@@ -57,7 +57,7 @@ These are regulatory facts. They're sourced, but a qualified tax adviser should 
 
 ## Images and credits
 
-**Used:** 12 credits. 5 images on `nano_banana_pro` at 2K, 4:5 (2 credits each), plus 2 credits on a test image I mistakenly ran on `nano_banana_2`. Balance: **519.06 credits**.
+**Used:** 18 credits. 5 photos and 3 models on `nano_banana_pro` at 2K (2 credits each), plus 2 credits on a test image I mistakenly ran on `nano_banana_2`. Balance: **about 513 credits**.
 
 **Model names are misleading.** In the Higgsfield catalog, `nano_banana_2` is *Nano Banana 2*, the cheaper Flash model: its job came back labelled `nano_banana_flash`. Nano Banana Pro is `nano_banana_pro`. The Pro jobs are labelled `nano_banana_2` in the job history. Check your history shows them as Pro.
 
@@ -70,18 +70,45 @@ These are regulatory facts. They're sourced, but a qualified tax adviser should 
 5. **Real team photos beat AI for trust, and cost nothing in credits.** One half-day shoot of the consultants gives you cover images for months, and P12 ("ask these five questions") is stronger with a real face.
 6. **No blind rerolls.** Preflight with the cost check, batch generations, and only regenerate when you know what to change in the prompt.
 
+## Layered PSD files
+
+`psd/<post>/<post>-<slide>.psd`: 55 files, 1080 x 1350, RGBA, about 1 MB each. Every slide has the same layer structure:
+
+- **Background:** the ground (white, mist gradient or navy)
+- **Photo:** the photo panel and, on P01, P03 and P12, the cut-out model
+- **Brand:** the official logo (standard or reversed)
+- **Text:** one layer per element, named by role and wording ("Keyword: NOVEMBER", "Key tag: IN DUBAI", "Body: …")
+- **Footer:** website and swipe cue
+
+Text layers are **rasterised**, not live type: each element is its own positioned layer, so you can move, recolour or delete it, but to change the words you retype them in Urbanist (sizes in `brand/tokens.json`). No tool available here writes editable Photoshop type.
+
 ## Finishing the photo posts
 
-Five covers (P01, P03, P05, P07, P10) show a labelled placeholder where the photo goes: this environment can't download from Higgsfield's image host (`d8j0ntlcm91z4.cloudfront.net`). Either:
+Five photo panels (P01, P03, P05, P07, P10) and three model cut-outs (P01, P03, P12) are placeholders in both the PNGs and the PSDs, because this environment can't download from Higgsfield's image host (`d8j0ntlcm91z4.cloudfront.net`). The images exist in your Higgsfield library:
 
-- allow that host in the environment's network settings and run `python3 fetch_images.py` (downloads, rebuilds and re-renders), or
-- download the five images from your Higgsfield library, save them in `images/` under the names in `calendar.md`, and run `python3 build.py && NODE_PATH=$(npm root -g) node render.js`.
+| File | Shows | Higgsfield job |
+| --- | --- | --- |
+| img-1-skyline.png | Dubai skyline in morning haze | 7e11b0f8 |
+| img-2-fork.png | Aerial highway splitting two ways | 0c6a98d4 |
+| img-3-bank.png | Blank card and folder on marble | 43535652 |
+| img-4-scale.png | Brass balance scale, two white cubes | 6ea14b77 |
+| img-5-tower.png | Single glass office tower | ffedbe98 |
+| model-1-businessman.png | Businessman in navy suit, walking (P01) | 94e10a80 |
+| model-2-emirati.png | Emirati businessman in white kandura (P03) | 5adb758c |
+| model-3-consultant.png | Consultant in navy blazer and hijab (P12) | dd5a2ad8 |
 
-The layout crops each photo to the panel automatically.
+Either:
+
+- allow that host in the environment's network settings and run `python3 fetch_images.py`: it downloads everything, cuts out the three models locally (rembg, no credits), re-renders the PNGs and rebuilds all PSDs; or
+- download the files yourself into `images/` (models as `model-…-raw.png`) and run `python3 fetch_images.py --local`.
+
+P12's cover uses a generated consultant as a stand-in. Replace her with a real ConnectIn team member when you have the photo: it's a post about trusting the people you hire.
 
 ## Files
 
 - `build.py`: all copy and slide structure; writes `html/`, `posts.json`, `calendar.md`
 - `render.js`: renders `html/` to `posts/<id>/<nn>.png` (1080 x 1350) and flags text that overflows or runs under the photo
 - `content.css`: layouts added for this month (comparison, table, deadline rows, DM box, split layouts)
-- `fetch_images.py`: pulls the Higgsfield images once the host is reachable
+- `fetch_images.py`: pulls the Higgsfield images once the host is reachable, cuts out the models, rebuilds PNGs and PSDs
+- `psd_layers.js`: exports each slide element as a transparent layer (`layers/`, not committed)
+- `make_psd.py`: assembles those layers into grouped PSDs in `psd/`

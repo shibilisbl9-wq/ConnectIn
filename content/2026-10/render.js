@@ -19,7 +19,7 @@ const fs = require('fs'), path = require('path');
     });
     if (over > 0) console.log('OVERFLOW', f, over + 'px');
     const hit = await p.evaluate(() => {
-      const img = document.querySelector('.ci-post__image'); if (!img) return null;
+      const img = document.querySelector('.ci-post__model') || document.querySelector('.ci-post__image'); if (!img) return null;
       const r = img.getBoundingClientRect();
       const els = [...document.querySelectorAll('.ci-post__main *')].filter(e => e.children.length === 0 || e.matches('p'));
       const bad = els.find(e => { const q = e.getBoundingClientRect(); return q.right > r.left && q.bottom > r.top && q.width > 0; });

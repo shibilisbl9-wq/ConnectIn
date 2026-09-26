@@ -30,6 +30,12 @@ IMAGES = {
     'img-4-scale.png': ('6ea14b77-2283-451d-a2bd-6954b68b639b', 'Brass balance scale with two white cubes'),
     'img-5-tower.png': ('ffedbe98-745e-4cb1-94cb-df41e191695c', 'Single glass office tower, pale sky'),
 }
+# Models: generated on a plain grey backdrop, cut out locally (fetch_images.py) to transparent PNGs.
+MODELS = {
+    'model-1-businessman.png': ('94e10a80-8c62-4b6e-951a-cf98d3d6aa83', 'Businessman in navy suit, walking, full length'),
+    'model-2-emirati.png': ('5adb758c-e65a-48aa-a418-33eb0bc4e4bc', 'Emirati businessman in white kandura, full length'),
+    'model-3-consultant.png': ('dd5a2ad8-62c3-43b8-b804-6be15f851381', 'Consultant in navy blazer and hijab, arms crossed'),
+}
 
 E = html.escape
 
@@ -131,13 +137,24 @@ def arrange(main, inner):
     return 'split', f'<div class="ci-group ci-group--top">{top}</div><div class="ci-group">{bottom}</div>'
 
 
-def slide(theme, head, main, foot_swipe=True, image=None, mist=False, tight=False, center=False, inner=False):
-    cls = 'ci-post' + (' ci-post--mist' if mist else '')
+def model_layer(name, kind):
+    path = os.path.join(HERE, 'images', name)
+    cls = f'ci-post__model ci-post__model--{kind}'
+    if os.path.exists(path):
+        return f'<div class="{cls}"><img src="../images/{name}" alt=""></div>'
+    job, what = MODELS[name]
+    return (f'<div class="{cls} ci-post__model--missing"><span>Model cut-out: {E(what)}<br>'
+            f'{E(name)} · job {job[:8]}</span></div>')
+
+
+def slide(theme, head, main, foot_swipe=True, image=None, mist=False, tight=False, center=False, inner=False,
+          model=None, model_kind='full'):
+    cls = 'ci-post' + (' ci-post--mist' if mist else '') + (' ci-post--has-model' if model else '')
     attr = f' data-theme="{theme}"' if theme == 'navy' else ''
     layout, main = arrange(main, inner) if not image else (None, main)
     main_cls = ('ci-post__main' + (' ci-post__main--tight' if tight and not layout else '')
                 + (f' ci-post__main--{layout}' if layout else '') + (' ci-post__main--inner' if inner else ''))
-    img = image_panel(image) if image else ''
+    img = (image_panel(image) if image else '') + (model_layer(model, model_kind) if model else '')
     swipe = '<span class="ci-swipe">Swipe</span>' if foot_swipe else ''
     return (f'<div class="{cls}"{attr}>\n<div class="ci-post__head">{head}</div>\n'
             f'<div class="{main_cls}">{main}</div>\n{img}\n'
@@ -169,7 +186,7 @@ HASH_TAX = '#UAECorporateTax #UAEeInvoicing #FTA #DubaiSME #UAEBusiness #Connect
 
 # P01 ---------------------------------------------------------------------------------------
 post('P01', '2026-10-05', 'Carousel', 'Process', 'Four-week setup plan', [
-    dict(theme='daylight', head=LOGO, mist=True, image='img-1-skyline.png',
+    dict(theme='daylight', head=LOGO, mist=True, image='img-1-skyline.png', model='model-1-businessman.png',
          main=stack('Start in October, trade by', 'November', 'IN DUBAI') + pointer('Your four-week setup plan, week by week')),
     dict(theme='daylight', tight=True, main=numeral('01') + title('Week one: _decide_') +
          body('Pick your business activity, mainland or free zone, a trade name and who the shareholders are. **Every later step depends on these four answers.**')),
@@ -202,7 +219,7 @@ post('P02', '2026-10-07', 'Static', 'Compliance alert', 'E-invoicing ASP deadlin
 
 # P03 ---------------------------------------------------------------------------------------
 post('P03', '2026-10-08', 'Carousel', 'Decision guide', 'Mainland or free zone', [
-    dict(theme='daylight', head=LOGO, mist=True, image='img-2-fork.png',
+    dict(theme='daylight', head=LOGO, mist=True, image='img-2-fork.png', model='model-2-emirati.png',
          main=stack('Mainland or', 'Free zone?', 'WHICH ONE FITS') + pointer('Four questions that settle it')),
     dict(theme='daylight', tight=True, main=title('Who are your _customers_?') +
          compare(('Mainland', 'You sell directly to customers anywhere in the UAE.'),
@@ -360,8 +377,9 @@ post('P11', '2026-10-28', 'Static', 'Compliance alert', 'Deadlines to save', [
 
 # P12 ---------------------------------------------------------------------------------------
 post('P12', '2026-10-29', 'Carousel', 'Trust', 'Five questions to ask any setup consultant', [
-    dict(theme='daylight', head=LOGO, main=stack('Before you sign with any', 'Consultant', 'ASK THESE 5') + SPLIT +
-         '<p class="ci-numeral">5</p>' + pointer('Including us. Especially us.') + body('A good consultant answers all five in writing, without hesitating.')),
+    dict(theme='daylight', head=LOGO, mist=True, model='model-3-consultant.png', model_kind='half',
+         main=stack('Before you sign with any', 'Consultant', 'ASK THESE 5') + SPLIT +
+         pointer('Including us. Especially us.') + body('A good consultant answers all five in writing, without hesitating.')),
     dict(theme='daylight', tight=True, main=numeral('01') + title('Is the quote _all-inclusive_?') +
          body('Government fees, visas, medical, Emirates ID and workspace. Ask what is not included, not just what is.')),
     dict(theme='daylight', tight=True, main=numeral('02') + title('Who _owns_ the documents?') +
@@ -391,15 +409,17 @@ def build():
             inner = not s.get('head')
             head = s.get('head') or counter(i, n)
             markup = slide(s['theme'], head, s['main'], foot_swipe=(not is_last and n > 1),
-                           image=s.get('image'), mist=s.get('mist', False), tight=s.get('tight', False), inner=inner)
+                           image=s.get('image'), mist=s.get('mist', False), tight=s.get('tight', False), inner=inner,
+                           model=s.get('model'), model_kind=s.get('model_kind', 'full'))
             name = f"{p['id']}-{i:02d}.html"
             with open(os.path.join(HERE, 'html', name), 'w') as f:
                 f.write(HEAD.replace('{title}', f"{p['id']} {i}/{n}") + markup + '\n</body></html>\n')
             files.append(name)
         manifest.append({k: p[k] for k in ('id', 'date', 'format', 'pillar', 'topic', 'caption', 'alt')} |
-                        {'slides': files, 'images': sorted({s['image'] for s in p['slides'] if s.get('image')})})
+                        {'slides': files, 'images': sorted({s['image'] for s in p['slides'] if s.get('image')}),
+                         'models': sorted({s['model'] for s in p['slides'] if s.get('model')})})
     with open(os.path.join(HERE, 'posts.json'), 'w') as f:
-        json.dump({'images': IMAGES, 'posts': manifest}, f, indent=2, ensure_ascii=False)
+        json.dump({'images': IMAGES, 'models': MODELS, 'posts': manifest}, f, indent=2, ensure_ascii=False)
     write_calendar(manifest)
     print(len(POSTS), 'posts,', sum(len(p['slides']) for p in POSTS), 'slides')
 
@@ -412,7 +432,7 @@ def write_calendar(manifest):
     for p in manifest:
         d = datetime.date.fromisoformat(p['date'])
         lines.append(f"| {d:%a %d %b} | {p['id']} | {p['format']} ({len(p['slides'])}) | {p['pillar']} | {p['topic']} | "
-                     f"{', '.join(p['images']) or 'none: typographic'} |")
+                     f"{', '.join(p['images'] + p['models']) or 'none: typographic'} |")
     for p in manifest:
         d = datetime.date.fromisoformat(p['date'])
         lines += ['', f"## {p['id']} · {d:%A %d %B} · {p['topic']}", '',
@@ -421,6 +441,8 @@ def write_calendar(manifest):
                   '**Caption**', '', '```', p['caption'], '```', '', f"**Alt text:** {p['alt']}"]
         if p['images']:
             lines += ['', '**Photo:** ' + '; '.join(f"`{i}`: {IMAGES[i][1]} (Higgsfield job `{IMAGES[i][0]}`)" for i in p['images'])]
+        if p['models']:
+            lines += ['', '**Model:** ' + '; '.join(f"`{m}`: {MODELS[m][1]} (Higgsfield job `{MODELS[m][0]}`)" for m in p['models'])]
     with open(os.path.join(HERE, 'calendar.md'), 'w') as f:
         f.write('\n'.join(lines) + '\n')
 
