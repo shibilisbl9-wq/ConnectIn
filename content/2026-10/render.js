@@ -18,14 +18,14 @@ const fs = require('fs'), path = require('path');
       return Math.round(last.getBoundingClientRect().bottom - (ft.getBoundingClientRect().top - 24));
     });
     if (over > 0) console.log('OVERFLOW', f, over + 'px');
-    const hit = await p.evaluate(() => {
-      const img = document.querySelector('.ci-post__model') || document.querySelector('.ci-post__image'); if (!img) return null;
-      const r = img.getBoundingClientRect();
-      const els = [...document.querySelectorAll('.ci-post__main *')].filter(e => e.children.length === 0 || e.matches('p'));
-      const bad = els.find(e => { const q = e.getBoundingClientRect(); return q.right > r.left && q.bottom > r.top && q.width > 0; });
-      return bad ? bad.textContent.slice(0, 40) : null;
+    // cover objects: record every text box so check_objects.py can test it against the object's pixels
+    const boxes = await p.evaluate(() => {
+      if (!document.querySelector('.ci-post__object')) return null;
+      const els = [...document.querySelectorAll('.ci-post__main *, .ci-post__foot > *')].filter(e => e.children.length === 0 || e.matches('p, .ci-tag, .ci-cta, .ci-swipe'));
+      return els.map(e => { const q = e.getBoundingClientRect(); return { text: (e.textContent || '').trim().slice(0, 40), x: q.left, y: q.top, w: q.width, h: q.height }; })
+        .filter(b => b.w > 0 && b.h > 0);
     });
-    if (hit) console.log('UNDER IMAGE', f, JSON.stringify(hit));
+    if (boxes) { fs.mkdirSync(path.join(dir, 'objects', 'boxes'), { recursive: true }); fs.writeFileSync(path.join(dir, 'objects', 'boxes', id + '.json'), JSON.stringify(boxes)); }
     await p.screenshot({ path: path.join(dir, 'posts', id, nn + '.png') });
   }
   await b.close();

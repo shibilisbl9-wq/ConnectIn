@@ -43,6 +43,7 @@ bash render_all.sh                 # stills and materials into ../img/, then bot
 
 - `scene.html?s=capsule|chess|towers|paper` renders the four stills. They share one studio environment, and query parameters set the camera and lights. `render_all.sh` has the exact values used.
 - `scene.html?s=registered` renders the brass ® for `content/trademark-registration` from `brand/fonts/Urbanist-ExtraBold.ttf`. The command is in that folder's README.
+- `scene.html?s=cover&o=hourglass|signpost|card|scale|tower|question&alpha=1` renders the October cover objects on a transparent background with their floor shadow. The commands are in `content/2026-10/render_objects.sh`.
 - `textures.html?t=twill|brass|marble|emboss` renders the four materials.
 - `capsule.json` is the capsule outline traced from `assets/Logos/connectin-logo.png`, normalised to a width of 1.
 - Rendering is deterministic: the same inputs produce the same files byte for byte.

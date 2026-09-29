@@ -1,40 +1,5 @@
 {
-  "images": {
-    "img-1-skyline.png": [
-      "7e11b0f8-3623-41fb-b6c8-d00a19c27a6b",
-      "Dubai skyline in morning haze"
-    ],
-    "img-2-fork.png": [
-      "0c6a98d4-9e9b-48ac-a38f-cc38d4063ba3",
-      "Aerial highway splitting two ways"
-    ],
-    "img-3-bank.png": [
-      "43535652-991a-4dc0-a78b-704e981c6d82",
-      "Blank card and folder on marble, bank interior"
-    ],
-    "img-4-scale.png": [
-      "6ea14b77-2283-451d-a2bd-6954b68b639b",
-      "Brass balance scale with two white cubes"
-    ],
-    "img-5-tower.png": [
-      "ffedbe98-745e-4cb1-94cb-df41e191695c",
-      "Single glass office tower, pale sky"
-    ]
-  },
-  "models": {
-    "model-1-businessman.png": [
-      "94e10a80-8c62-4b6e-951a-cf98d3d6aa83",
-      "Businessman in navy suit, walking, full length"
-    ],
-    "model-2-emirati.png": [
-      "5adb758c-e65a-48aa-a418-33eb0bc4e4bc",
-      "Emirati businessman in white kandura, full length"
-    ],
-    "model-3-consultant.png": [
-      "dd5a2ad8-62c3-43b8-b804-6be15f851381",
-      "Consultant in navy blazer and hijab, arms crossed"
-    ]
-  },
+  "site": null,
   "posts": [
     {
       "id": "P01",
@@ -53,12 +18,17 @@
         "P01-06.html",
         "P01-07.html"
       ],
-      "images": [
-        "img-1-skyline.png"
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
       ],
-      "models": [
-        "model-1-businessman.png"
-      ]
+      "dm": "OCTOBER",
+      "object": "Brass hourglass, sand running"
     },
     {
       "id": "P02",
@@ -71,8 +41,11 @@
       "slides": [
         "P02-01.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "navy"
+      ],
+      "dm": "INVOICE",
+      "object": null
     },
     {
       "id": "P03",
@@ -91,12 +64,17 @@
         "P03-06.html",
         "P03-07.html"
       ],
-      "images": [
-        "img-2-fork.png"
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
       ],
-      "models": [
-        "model-2-emirati.png"
-      ]
+      "dm": "CHOOSE",
+      "object": "Signpost with a brass arrow and a navy arrow pointing opposite ways"
     },
     {
       "id": "P04",
@@ -109,8 +87,11 @@
       "slides": [
         "P04-01.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "daylight"
+      ],
+      "dm": "DOCS",
+      "object": null
     },
     {
       "id": "P05",
@@ -129,10 +110,17 @@
         "P05-06.html",
         "P05-07.html"
       ],
-      "images": [
-        "img-3-bank.png"
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
       ],
-      "models": []
+      "dm": "BANK",
+      "object": "Navy bank card with a brass chip in a brass stand on marble"
     },
     {
       "id": "P06",
@@ -145,8 +133,11 @@
       "slides": [
         "P06-01.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "navy"
+      ],
+      "dm": "TAX",
+      "object": null
     },
     {
       "id": "P07",
@@ -165,10 +156,17 @@
         "P07-06.html",
         "P07-07.html"
       ],
-      "images": [
-        "img-4-scale.png"
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
       ],
-      "models": []
+      "dm": "COST",
+      "object": "Brass balance scale, a navy cube outweighing a white one"
     },
     {
       "id": "P08",
@@ -181,8 +179,11 @@
       "slides": [
         "P08-01.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "daylight"
+      ],
+      "dm": "ZONE TAX",
+      "object": null
     },
     {
       "id": "P09",
@@ -201,8 +202,17 @@
         "P09-06.html",
         "P09-07.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "navy",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
+      ],
+      "dm": "90DAYS",
+      "object": null
     },
     {
       "id": "P10",
@@ -222,10 +232,18 @@
         "P10-07.html",
         "P10-08.html"
       ],
-      "images": [
-        "img-5-tower.png"
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
       ],
-      "models": []
+      "dm": "ZONE",
+      "object": "Twisting glass tower model on a brass plinth"
     },
     {
       "id": "P11",
@@ -238,8 +256,11 @@
       "slides": [
         "P11-01.html"
       ],
-      "images": [],
-      "models": []
+      "themes": [
+        "navy"
+      ],
+      "dm": "DEADLINES",
+      "object": null
     },
     {
       "id": "P12",
@@ -258,10 +279,17 @@
         "P12-06.html",
         "P12-07.html"
       ],
-      "images": [],
-      "models": [
-        "model-3-consultant.png"
-      ]
+      "themes": [
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "daylight",
+        "navy"
+      ],
+      "dm": "ASK",
+      "object": "Brass question mark"
     }
   ]
 }

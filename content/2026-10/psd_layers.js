@@ -26,8 +26,7 @@ const ROLES = [
       const post = document.querySelector('.ci-post'), out = [];
       const add = (el, group, name, self) => { el.dataset.layer = out.length; out.push({ group, name, self: !!self }); };
       add(post, 'Background', post.dataset.theme === 'navy' ? 'Navy ground' : 'Ground', true);
-      const img = post.querySelector('.ci-post__image'); if (img) add(img, 'Photo', img.classList.contains('ci-post__image--missing') ? 'Photo panel (placeholder)' : 'Photo panel');
-      const mod = post.querySelector('.ci-post__model'); if (mod) add(mod, 'Photo', mod.classList.contains('ci-post__model--missing') ? 'Model cut-out (placeholder)' : 'Model cut-out');
+      const obj = post.querySelector('.ci-post__object'); if (obj) add(obj, 'Object', 'Cover object (3D render with floor shadow)');
       post.querySelectorAll('.ci-post__head img').forEach(el => { if (getComputedStyle(el).display !== 'none') add(el, 'Brand', 'Logo' + (el.classList.contains('ci-logo--reversed') ? ' (reversed)' : '')); });
       const taken = new Set();
       post.querySelectorAll('.ci-post__head, .ci-post__main').forEach(root => {
@@ -39,7 +38,8 @@ const ROLES = [
           add(el, 'Text', r[1] + (txt ? ': ' + txt : ''));
         });
       });
-      post.querySelectorAll('.ci-post__url, .ci-swipe').forEach(el => add(el, 'Footer', el.classList.contains('ci-swipe') ? 'Swipe cue' : 'Website'));
+      post.querySelectorAll('.ci-post__url, .ci-swipe, .ci-cta').forEach(el => add(el, 'Footer',
+        el.classList.contains('ci-swipe') ? 'Swipe cue' : el.classList.contains('ci-cta') ? 'DM call to action: ' + el.innerText.replace(/\s+/g, ' ').trim() : 'Website'));
       return out;
     }, ROLES);
     const layers = [];
@@ -53,7 +53,7 @@ const ROLES = [
         return { x: r.left, y: r.top, w: r.width, h: r.height };
       }, i);
       // pad for drop shadows and gradient text overhang, clamp to canvas
-      const pad = specs[i].group === 'Photo' ? 60 : 12;
+      const pad = specs[i].group === 'Object' ? 0 : 12;
       const x = Math.max(0, Math.floor(box.x - pad)), y = Math.max(0, Math.floor(box.y - pad));
       const w = Math.min(1080, Math.ceil(box.x + box.w + pad)) - x, h = Math.min(1350, Math.ceil(box.y + box.h + pad)) - y;
       if (w <= 0 || h <= 0) continue;
