@@ -1,0 +1,294 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>html,body{margin:0;background:#000}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head>
+<body>
+<script type="module">
+// ConnectIn moodboard renders: one studio, four still lifes.
+// ?s=capsule|chess|towers|paper&w=&h=  (+ tuning params read below)
+import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+import { toCreasedNormals } from 'three/addons/utils/BufferGeometryUtils.js';
+
+const q = new URLSearchParams(location.search);
+const num = (k, d) => (q.has(k) ? +q.get(k) : d);
+const S = q.get('s') || 'capsule';
+const W = num('w', 1200), H = num('h', 1200);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+renderer.setPixelRatio(1);
+renderer.setSize(W, H);
+renderer.toneMapping = THREE.NeutralToneMapping;
+renderer.toneMappingExposure = num('exp', 1.0);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = q.get('vsm') ? THREE.VSMShadowMap : THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(30, W / H, 0.05, 300);
+
+// ---------- studio environment (reflections only; set per material) ----------
+const pmrem = new THREE.PMREMGenerator(renderer);
+function studioEnv(extra = []) {
+  const env = new THREE.Scene();
+  const geo = new THREE.SphereGeometry(20, 64, 32);
+  const col = [], c = new THREE.Color(), top = new THREE.Color('#b4bec7'), bot = new THREE.Color('#353d44');
+  const p = geo.attributes.position;
+  for (let i = 0; i < p.count; i++) { const t = (p.getY(i) / 20 + 1) / 2; c.copy(bot).lerp(top, Math.pow(t, 0.8)); col.push(c.r, c.g, c.b); }
+  geo.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  env.add(new THREE.Mesh(geo, new THREE.MeshBasicMaterial({ side: THREE.BackSide, vertexColors: true })));
+  const panel = (w, h, pos, k, color = '#ffffff') => {
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: new THREE.Color(color).multiplyScalar(k), side: THREE.DoubleSide }));
+    m.position.set(...pos); m.lookAt(0, 0, 0); env.add(m);
+  };
+  panel(9, 6, [-8, 10, 6], 7);                 // key softbox, top left front
+  panel(2, 14, [12, 2, 2], 5, '#f4f8fb');       // strip, right
+  panel(12, 4, [0, 3, 14], 1.6);               // front fill
+  panel(16, 16, [0, 16, -2], 1.8, '#eef3f7');   // overhead
+  panel(3, 10, [-12, 1, -6], 3.5, '#fff4e6');   // warm rim, back left
+  extra.forEach(a => panel(...a));
+  return pmrem.fromScene(env, 0.02).texture;
+}
+let ENV = null;
+const env = (m, k = 1) => { m.envMap = ENV; m.envMapIntensity = k; return m; };
+
+// ---------- helpers ----------
+function cyc({ width = 16, depth = 10, height = 9, radius = 2.4, color = '#e8eff5', rough = 1, k = 0.25, lift = 0 }) {
+  const prof = [];
+  for (let i = 0; i <= 24; i++) prof.push([depth * (1 - i / 24), 0]);
+  for (let i = 1; i <= 48; i++) { const a = (i / 48) * Math.PI / 2; prof.push([-Math.sin(a) * radius, radius - Math.cos(a) * radius]); }
+  for (let i = 1; i <= 16; i++) prof.push([-radius, radius + (height - radius) * i / 16]);
+  const pos = [], idx = [];
+  prof.forEach(([z, y]) => pos.push(-width / 2, y, z, width / 2, y, z));
+  for (let i = 0; i < prof.length - 1; i++) { const a = i * 2, b = a + 1, c = a + 2, d = a + 3; idx.push(a, b, c, b, d, c); }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3));
+  g.setIndex(idx); g.computeVertexNormals();
+  const m = new THREE.Mesh(g, env(new THREE.MeshStandardMaterial({ color, roughness: rough, metalness: 0, side: THREE.DoubleSide, emissive: color, emissiveIntensity: lift }), k));
+  m.receiveShadow = true;
+  return m;
+}
+function keyLight({ pos = [-3, 5, 3], target = [0, 0.3, 0], intensity = 3, color = '#ffffff', size = 3, radius = 6, map = 2048, far = 40 }) {
+  const l = new THREE.DirectionalLight(color, intensity);
+  l.position.set(...pos); l.target.position.set(...target);
+  l.castShadow = true;
+  l.shadow.mapSize.set(map, map);
+  const c = l.shadow.camera; c.left = -size; c.right = size; c.top = size; c.bottom = -size; c.near = 0.1; c.far = far;
+  c.updateProjectionMatrix();
+  l.shadow.bias = -0.0003; l.shadow.normalBias = 0.006;
+  l.shadow.radius = radius; l.shadow.blurSamples = 24;
+  scene.add(l, l.target);
+  return l;
+}
+function fill(pos, intensity = 0.5, color = '#dfeaf4') {
+  const l = new THREE.DirectionalLight(color, intensity); l.position.set(...pos); scene.add(l); return l;
+}
+function blindsTexture({ slats = 16, open = 0.58, blur = 5, mullion = true }) {
+  const c = document.createElement('canvas'); c.width = 1024; c.height = 1024;
+  const g = c.getContext('2d');
+  g.fillStyle = '#000'; g.fillRect(0, 0, 1024, 1024);
+  g.filter = `blur(${blur}px)`;
+  g.fillStyle = '#fff';
+  const p = 1024 / slats;
+  for (let i = 0; i < slats; i++) g.fillRect(-40, i * p + p * (1 - open) / 2, 1104, p * open);
+  if (mullion) { g.fillStyle = '#000'; g.fillRect(492, -40, 40, 1104); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+function gobo({ pos, target, intensity = 60, color = '#fff1dc', angle = 0.42, penumbra = 0.35, texture }) {
+  const s = new THREE.SpotLight(color, intensity, 0, angle, penumbra, 2);
+  s.position.set(...pos); s.target.position.set(...target);
+  s.map = texture; s.castShadow = true;
+  s.shadow.mapSize.set(2048, 2048); s.shadow.bias = -0.0003; s.shadow.radius = 4; s.shadow.blurSamples = 16;
+  s.shadow.camera.near = 0.5; s.shadow.camera.far = 30;
+  scene.add(s, s.target);
+  return s;
+}
+const brass = (rough = 0.28, k = 1) => env(new THREE.MeshPhysicalMaterial({ color: q.get('brass') ? '#' + q.get('brass') : '#dcc088', metalness: 1, roughness: rough, anisotropy: 0.4 }), k);
+const navyLacquer = (k = 1) => env(new THREE.MeshPhysicalMaterial({ color: '#0a3552', roughness: 0.32, metalness: 0, clearcoat: 1, clearcoatRoughness: 0.06 }), k);
+const ivory = (k = 0.9) => env(new THREE.MeshPhysicalMaterial({ color: '#f4f1ea', roughness: 0.45, metalness: 0, clearcoat: 0.3, clearcoatRoughness: 0.25 }), k);
+const shadowed = o => o.traverse(x => { if (x.isMesh) { x.castShadow = true; x.receiveShadow = true; } });
+
+function profile(segs) {
+  const pts = [];
+  for (const s of segs) for (const p of s) { const last = pts[pts.length - 1]; if (!last || Math.hypot(last.x - p[0], last.y - p[1]) > 1e-5) pts.push(new THREE.Vector2(p[0], p[1])); }
+  return pts;
+}
+const line = (a, b, n = 2) => Array.from({ length: n + 1 }, (_, i) => [a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n]);
+const arc = (c, r, a0, a1, n = 12) => Array.from({ length: n + 1 }, (_, i) => { const a = (a0 + (a1 - a0) * i / n) * Math.PI / 180; return [c[0] + r * Math.cos(a), c[1] + r * Math.sin(a)]; });
+const quad = (a, c, b, n = 16) => Array.from({ length: n + 1 }, (_, i) => { const t = i / n, u = 1 - t; return [u * u * a[0] + 2 * u * t * c[0] + t * t * b[0], u * u * a[1] + 2 * u * t * c[1] + t * t * b[1]]; });
+
+function pawnGeo() {
+  return new THREE.LatheGeometry(profile([
+    line([0, 0], [0.40, 0]), arc([0.40, 0.02], 0.02, -90, 0, 8), line([0.42, 0.02], [0.42, 0.05]), arc([0.40, 0.05], 0.02, 0, 90, 8),
+    quad([0.40, 0.07], [0.33, 0.07], [0.34, 0.10]), arc([0.34, 0.12], 0.02, -90, 90, 12),
+    quad([0.34, 0.14], [0.16, 0.17], [0.15, 0.40], 24), line([0.15, 0.40], [0.14, 0.50]),
+    line([0.14, 0.50], [0.24, 0.51]), arc([0.24, 0.53], 0.02, -90, 90, 10), line([0.24, 0.55], [0.14, 0.56]),
+    quad([0.14, 0.56], [0.11, 0.59], [0.12, 0.623]), arc([0, 0.77], 0.19, -50.8, 90, 40),
+  ]), 128);
+}
+function king(mat) {
+  const pts = profile([
+    line([0, 0], [0.48, 0]), arc([0.48, 0.02], 0.02, -90, 0, 8), line([0.50, 0.02], [0.50, 0.06]), arc([0.48, 0.06], 0.02, 0, 90, 8),
+    quad([0.48, 0.08], [0.41, 0.08], [0.42, 0.12]), arc([0.42, 0.14], 0.02, -90, 90, 12),
+    line([0.42, 0.16], [0.36, 0.17]), quad([0.36, 0.17], [0.17, 0.30], [0.17, 1.02], 32),
+    line([0.17, 1.02], [0.30, 1.06]), arc([0.30, 1.085], 0.025, -90, 90, 10), line([0.30, 1.11], [0.18, 1.12]),
+    line([0.18, 1.12], [0.26, 1.13]), arc([0.26, 1.145], 0.015, -90, 90, 8), line([0.26, 1.16], [0.18, 1.17]),
+    quad([0.18, 1.17], [0.20, 1.36], [0.33, 1.48], 24), arc([0.31, 1.49], 0.02, -30, 90, 8),
+    quad([0.31, 1.51], [0.18, 1.57], [0, 1.575], 16),
+  ]);
+  const g = new THREE.Group();
+  g.add(new THREE.Mesh(new THREE.LatheGeometry(pts, 128), mat));
+  const ball = new THREE.Mesh(new THREE.SphereGeometry(0.065, 48, 32), mat); ball.position.y = 1.6; g.add(ball);
+  const v = new THREE.Mesh(new RoundedBoxGeometry(0.075, 0.27, 0.075, 4, 0.012), mat); v.position.y = 1.78; g.add(v);
+  const h = new THREE.Mesh(new RoundedBoxGeometry(0.21, 0.075, 0.075, 4, 0.012), mat); h.position.y = 1.8; g.add(h);
+  shadowed(g);
+  return g;
+}
+async function capsuleGeo(depth = 0.08) {
+  const d = await (await fetch('capsule.json')).json();
+  const outer = d.outer.map(p => new THREE.Vector2(p[0], p[1]));
+  const inner = d.inner.map(p => new THREE.Vector2(p[0], p[1]));
+  if (!THREE.ShapeUtils.isClockWise(outer)) outer.reverse();
+  if (THREE.ShapeUtils.isClockWise(inner)) inner.reverse();
+  const shape = new THREE.Shape(outer); shape.holes.push(new THREE.Path(inner));
+  let g = new THREE.ExtrudeGeometry(shape, { depth, bevelEnabled: true, bevelThickness: 0.012, bevelSize: 0.0045, bevelSegments: 8, curveSegments: 1, steps: 1 });
+  g.center();
+  g = toCreasedNormals(g, Math.PI / 5);
+  // keep the flat faces flat: creasing averages them into the bevel otherwise
+  const pos = g.attributes.position, nor = g.attributes.normal;
+  const a = new THREE.Vector3(), b = new THREE.Vector3(), c = new THREE.Vector3(), n = new THREE.Vector3(), e = new THREE.Vector3();
+  for (let i = 0; i < pos.count; i += 3) {
+    a.fromBufferAttribute(pos, i); b.fromBufferAttribute(pos, i + 1); c.fromBufferAttribute(pos, i + 2);
+    n.subVectors(c, b).cross(e.subVectors(a, b)).normalize();
+    if (Math.abs(n.z) > 0.9995) for (let k = 0; k < 3; k++) nor.setXYZ(i + k, n.x, n.y, n.z);
+  }
+  nor.needsUpdate = true;
+  return g;
+}
+
+// ---------- scenes ----------
+async function sceneCapsule() {
+  ENV = studioEnv([[10, 22, [-10, 2, 9], num('face', 5), '#ffffff']]);
+  scene.background = new THREE.Color('#eaf1f6');
+  const c = cyc({ k: num('fenv', 0.3) }); c.position.z = -1.2; scene.add(c);
+  const geo = await capsuleGeo(num('depth', 0.08));
+  geo.computeBoundingBox();
+  const m = new THREE.Mesh(geo, brass(num('rough', 0.26), num('menv', 1.1)));
+  m.position.set(0.02, (geo.boundingBox.max.y - geo.boundingBox.min.y) / 2, 0); m.rotation.y = num('rot', -0.32);
+  shadowed(m); scene.add(m);
+  keyLight({ pos: [-2.6, 4.2, 2.4], target: [0, 0.2, 0], intensity: num('key', 2.6), size: 1.6, radius: num('rad', 8), map: num('map', 2048) });
+  fill([3, 1.6, 2.5], num('fill', 0.5));
+  if (q.get('gobo') !== '0') gobo({ pos: [-4.2, 2.6, 1.8], target: [0.2, 0.55, -0.9], intensity: num('gi', 90), texture: blindsTexture({ slats: 14, open: 0.55, blur: 6 }) });
+  camera.fov = 26; camera.updateProjectionMatrix();
+  camera.position.set(num('cx', 0.5), num('cy', 0.58), num('cz', 2.6)); camera.lookAt(0.02, num('ly', 0.3), -0.05);
+}
+
+async function sceneChess() {
+  ENV = studioEnv();
+  scene.background = new THREE.Color('#eaf1f6');
+  const c = cyc({ k: num('fenv', 0.3), radius: 3, lift: num('lift', 0.3) }); c.position.z = -2.2; scene.add(c);
+  const pawn = new THREE.Mesh(pawnGeo(), navyLacquer(num('menv', 1.1))); shadowed(pawn);
+  pawn.position.set(0.2, 0, 0.5); scene.add(pawn);
+  const k = king(ivory()); k.position.set(-0.2, 0, -0.5); k.rotation.y = 0.5; scene.add(k);
+  keyLight({ pos: [-3, 4.6, 2.6], target: [0, 0.6, 0], intensity: num('key', 2.6), size: 2.2, radius: num('rad', 8) });
+  fill([3, 2, 3], num('fill', 0.55));
+  if (q.get('gobo') === '1') gobo({ pos: [-4.5, 3.2, 1.0], target: [0.2, 0.9, -1.4], intensity: num('gi', 80), texture: blindsTexture({ slats: 14 }) });
+  camera.fov = 24; camera.updateProjectionMatrix();
+  camera.position.set(num('cx', 0.55), num('cy', 0.95), num('cz', 7.6)); camera.lookAt(num('lx', 0.02), num('ly', 0.86), -0.1);
+}
+
+async function sceneTowers() {
+  ENV = studioEnv();
+  const sky = new THREE.Color(q.get('sky') ? '#' + q.get('sky') : '#e8eff5');
+  scene.background = sky;
+  scene.fog = new THREE.FogExp2(sky, num('fog', 0.03));
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), env(new THREE.MeshStandardMaterial({ color: '#edf2f6', roughness: 1 }), 0.25));
+  ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; scene.add(ground);
+  const white = env(new THREE.MeshStandardMaterial({ color: '#f2f5f8', roughness: 0.75 }), 0.4);
+  const glass = env(new THREE.MeshPhysicalMaterial({ color: '#d3e0ea', roughness: 0.18, metalness: 0.3, clearcoat: 0.5 }), 0.9);
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  function tower(x, z, w, d, h, mat) {
+    const g = new THREE.Group();
+    let y = 0, cw = w, cd = d, left = h;
+    const tiers = 1 + Math.floor(rnd() * 3);
+    for (let i = 0; i < tiers && left > 0.01; i++) {
+      const th = i === tiers - 1 ? left : left * (0.6 + rnd() * 0.2);
+      const b = new THREE.Mesh(new RoundedBoxGeometry(cw, th, cd, 2, 0.02), mat);
+      b.position.y = y + th / 2; g.add(b);
+      y += th; left -= th; cw *= 0.8; cd *= 0.8;
+    }
+    shadowed(g); g.position.set(x, 0, z); g.rotation.y = (rnd() - 0.5) * 0.3; scene.add(g);
+  }
+  for (let i = 0; i < 70; i++) {
+    const z = -6 - rnd() * 44, x = (rnd() - 0.5) * (8 + (-z) * 0.9);
+    if (Math.abs(x - 1.2) < 2.2 && z < -18 && z > -30) continue; // keep air around the supertall
+    if (z > -11 && Math.abs(x) > 1.6) continue;                   // no big blocks right at the lens
+    if (z > -24 && Math.abs(x - 1.2 * (8 - z) / 32) < 1.0 + 0.02 * (8 - z)) continue; // clear sightline to the supertall
+    const h = 2 + rnd() * (4 + (-z) * 0.22), w = 0.8 + rnd() * 1.1;
+    tower(x, z, w, w * (0.7 + rnd() * 0.5), h, rnd() < 0.35 ? glass : white);
+  }
+  // supertall: tapering setbacks + spire (abstracted, not a replica)
+  const st = new THREE.Group();
+  let y = 0; const tiers = 11;
+  for (let i = 0; i < tiers; i++) {
+    const r = 1.35 * Math.pow(1 - i / tiers, 1.1) + 0.12, h = 2.1 - i * 0.07;
+    const m = new THREE.Mesh(new THREE.CylinderGeometry(r * 0.97, r, h, 6, 1), glass);
+    m.rotation.y = (i % 3) * Math.PI / 9; m.position.y = y + h / 2; st.add(m); y += h;
+  }
+  const spire = new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.12, 5.5, 12), white); spire.position.y = y + 2.75; st.add(spire);
+  shadowed(st); st.position.set(1.2, 0, -24); scene.add(st);
+  keyLight({ pos: [30, 22, 10], target: [0, 0, -20], intensity: num('key', 2.4), color: '#fff3e2', size: 40, radius: 3, map: 4096, far: 120 });
+  fill([-12, 8, 10], num('fill', 0.55));
+  camera.fov = num('fov', 40); camera.updateProjectionMatrix();
+  camera.position.set(num('cx', 0), num('cy', 1.6), num('cz', 8)); camera.lookAt(num('lx', 0.6), num('ly', 9), -24);
+}
+
+async function scenePaper() {
+  ENV = studioEnv();
+  scene.background = new THREE.Color('#eaf1f6');
+  const floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), env(new THREE.MeshStandardMaterial({ color: '#e8eff5', roughness: 1 }), num('fenv', 0.3)));
+  floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
+  const folder = new THREE.Mesh(new RoundedBoxGeometry(0.80, 0.018, 1.08, 2, 0.006), env(new THREE.MeshPhysicalMaterial({ color: '#063352', roughness: 0.5, clearcoat: 0.4, clearcoatRoughness: 0.2 }), 0.8));
+  folder.position.set(-0.02, 0.009, 0.02); folder.rotation.y = -0.16; shadowed(folder); scene.add(folder);
+  const paperMat = env(new THREE.MeshStandardMaterial({ color: '#fbfaf7', roughness: 0.92 }), 0.35);
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  let y = 0.018;
+  for (let i = 0; i < 9; i++) {
+    const s = new THREE.Mesh(new THREE.BoxGeometry(0.70, 0.0035, 0.99), paperMat);
+    y += 0.0036; s.position.set(0.02 + (rnd() - 0.5) * 0.02, y, (rnd() - 0.5) * 0.02); s.rotation.y = -0.05 + (rnd() - 0.5) * 0.06;
+    shadowed(s); scene.add(s);
+  }
+  // pen: navy lacquer barrel, brass cap band and clip, lying across the stack
+  const pen = new THREE.Group();
+  const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.019, 0.017, 0.40, 48), navyLacquer()); barrel.position.y = 0; pen.add(barrel);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(0.0205, 0.0205, 0.2, 48), navyLacquer()); cap.position.y = 0.29; pen.add(cap);
+  const band = new THREE.Mesh(new THREE.CylinderGeometry(0.0212, 0.0212, 0.018, 48), brass(0.2)); band.position.y = 0.2; pen.add(band);
+  const endc = new THREE.Mesh(new THREE.SphereGeometry(0.0205, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), brass(0.2)); endc.position.y = 0.39; pen.add(endc);
+  const tip = new THREE.Mesh(new THREE.ConeGeometry(0.017, 0.06, 48), brass(0.2)); tip.position.y = -0.23; tip.rotation.x = Math.PI; pen.add(tip);
+  const clipBar = new THREE.Mesh(new RoundedBoxGeometry(0.008, 0.15, 0.006, 2, 0.002), brass(0.2)); clipBar.position.set(0, 0.3, 0.024); pen.add(clipBar);
+  shadowed(pen);
+  pen.rotation.set(Math.PI / 2, 0, -0.95); pen.position.set(0.05, y + 0.02, 0.05); scene.add(pen);
+  // stamp: navy body, brass neck and knob
+  const stamp = new THREE.Group();
+  const base = new THREE.Mesh(new RoundedBoxGeometry(0.26, 0.07, 0.17, 4, 0.02), navyLacquer()); base.position.y = 0.047; stamp.add(base);
+  const pad = new THREE.Mesh(new RoundedBoxGeometry(0.25, 0.014, 0.16, 2, 0.005), env(new THREE.MeshStandardMaterial({ color: '#0c1b26', roughness: 0.9 }), 0.3)); pad.position.y = 0.007; stamp.add(pad);
+  const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.03, 0.11, 32), brass(0.25)); neck.position.y = 0.137; stamp.add(neck);
+  const knob = new THREE.Mesh(new THREE.SphereGeometry(0.058, 48, 32), brass(0.22)); knob.position.y = 0.24; knob.scale.y = 0.92; stamp.add(knob);
+  shadowed(stamp); stamp.position.set(0.5, 0, 0.42); stamp.rotation.y = 0.5; scene.add(stamp);
+  keyLight({ pos: [-2.2, 4.5, 1.2], target: [0, 0, 0], intensity: num('key', 2.2), size: 1.4, radius: num('rad', 8) });
+  fill([2.5, 2.2, 2.5], num('fill', 0.45));
+  if (q.get('gobo') !== '0') gobo({ pos: [-3.2, 3.4, -0.6], target: [0.15, 0, 0.1], intensity: num('gi', 70), angle: 0.5, texture: blindsTexture({ slats: 12, open: 0.56, blur: 7 }) });
+  camera.fov = num('fov', 30); camera.updateProjectionMatrix();
+  camera.position.set(num('cx', 0.75), num('cy', 2.9), num('cz', 2.55)); camera.lookAt(num('lx', 0.06), 0, num('lz', 0.16));
+}
+
+await ({ capsule: sceneCapsule, chess: sceneChess, towers: sceneTowers, paper: scenePaper })[S]();
+renderer.render(scene, camera);
+window.__done = true;
+</script>
+</body>
+</html>

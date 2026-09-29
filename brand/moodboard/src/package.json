@@ -1,0 +1,12 @@
+{
+  "name": "connectin-moodboard-renders",
+  "private": true,
+  "description": "Renders the ConnectIn moodboard stills (scene.html), materials (textures.html) and boards in headless Chromium.",
+  "scripts": {
+    "render": "bash render_all.sh"
+  },
+  "dependencies": {
+    "playwright": "1.56.1",
+    "three": "0.180.0"
+  }
+}

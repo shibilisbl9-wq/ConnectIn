@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+<head><meta charset="utf-8"><style>html,body{margin:0}canvas{display:block}</style></head>
+<body>
+<canvas id="c"></canvas>
+<script type="module">
+// ConnectIn moodboard materials, drawn procedurally. ?t=twill|brass|marble|emboss&w=&h=
+const q = new URLSearchParams(location.search);
+const T = q.get('t') || 'twill';
+const W = +(q.get('w') || 800), H = +(q.get('h') || 800);
+const cv = document.getElementById('c'); cv.width = W; cv.height = H;
+const ctx = cv.getContext('2d');
+
+// value noise + fBm (seeded, tileable enough for our purposes)
+function makeNoise(seed = 1) {
+  const P = new Uint8Array(512); const p = [...Array(256).keys()];
+  let s = seed; const r = () => (s = (s * 16807) % 2147483647) / 2147483647;
+  for (let i = 255; i > 0; i--) { const j = Math.floor(r() * (i + 1)); [p[i], p[j]] = [p[j], p[i]]; }
+  for (let i = 0; i < 512; i++) P[i] = p[i & 255];
+  const G = [...Array(256)].map(() => r() * 2 - 1);
+  const fade = t => t * t * t * (t * (t * 6 - 15) + 10);
+  const lerp = (a, b, t) => a + (b - a) * t;
+  const n2 = (x, y) => {
+    const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi;
+    const X = xi & 255, Y = yi & 255;
+    const v = (i, j) => G[P[P[X + i] + Y + j]];
+    const u = fade(xf), w = fade(yf);
+    return lerp(lerp(v(0, 0), v(1, 0), u), lerp(v(0, 1), v(1, 1), u), w);
+  };
+  const fbm = (x, y, oct = 5, lac = 2, gain = 0.5) => { let a = 0, amp = 0.5, f = 1; for (let i = 0; i < oct; i++) { a += amp * n2(x * f, y * f); f *= lac; amp *= gain; } return a; };
+  return { n2, fbm, r };
+}
+const hex = h => [parseInt(h.slice(1, 3), 16), parseInt(h.slice(3, 5), 16), parseInt(h.slice(5, 7), 16)];
+function ramp(stops) { // stops: [[t, '#hex'], ...]
+  const S = stops.map(([t, c]) => [t, hex(c)]);
+  return t => {
+    t = Math.min(1, Math.max(0, t));
+    for (let i = 1; i < S.length; i++) if (t <= S[i][0]) { const [t0, a] = S[i - 1], [t1, b] = S[i]; const k = (t - t0) / (t1 - t0); return [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k]; }
+    return S[S.length - 1][1];
+  };
+}
+const img = ctx.createImageData(W, H), D = img.data;
+const put = (x, y, c) => { const i = (y * W + x) * 4; D[i] = c[0]; D[i + 1] = c[1]; D[i + 2] = c[2]; D[i + 3] = 255; };
+
+function twill() {
+  const N = makeNoise(3);
+  const cell = +(q.get('cell') || 7);
+  const base = ramp([[0, '#021a2b'], [0.45, '#062c46'], [0.75, '#0d3b5c'], [1, '#2a5878']]);
+  const colV = [], rowV = [];
+  for (let i = 0; i < W / cell + 2; i++) colV.push((N.r() - 0.5) * 0.12);
+  for (let i = 0; i < H / cell + 2; i++) rowV.push((N.r() - 0.5) * 0.12);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const ci = Math.floor(x / cell), ri = Math.floor(y / cell);
+    const fx = (x % cell) / cell, fy = (y % cell) / cell;
+    const warpUp = ((ci + ri) % 4 + 4) % 4 < 2;           // 2/2 twill: diagonal ribs
+    const across = warpUp ? fx : fy;                        // yarn runs vertically (warp) or horizontally (weft)
+    let v = 0.5 + 0.22 * Math.sin(Math.PI * across) - 0.08; // round yarn
+    v += 0.16 * Math.sin(2 * Math.PI * (x + y) / (4 * cell));  // the diagonal rib
+    v += warpUp ? colV[ci] : rowV[ri];
+    v += 0.1 * N.n2(x * 0.9, y * 0.9) + 0.05 * N.n2(x * 2.3, y * 2.3); // fibre fuzz
+    v += 0.1 * N.fbm(x / 260, y / 260, 3);                  // cloth drape light
+    v += 0.12 * (1 - (x + y) / (W + H));                    // soft light from top left
+    put(x, y, base(v));
+  }
+  ctx.putImageData(img, 0, 0);
+  ctx.filter = 'blur(0.6px)'; ctx.drawImage(cv, 0, 0); ctx.filter = 'none';
+}
+
+function brass() {
+  const N = makeNoise(5);
+  const col = ramp([[0, '#4a3a0f'], [0.3, '#7c6527'], [0.55, '#a88a45'], [0.78, '#d9c28a'], [0.92, '#efe2bb'], [1, '#faf3dc']]);
+  const rowN = []; for (let y = 0; y < H; y++) rowN.push(N.n2(0.5, y * 0.35) * 0.5 + N.n2(3.1, y * 1.7) * 0.35 + N.n2(7.7, y * 4.1) * 0.15);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const streak = rowN[y] * 0.55 + N.n2(x * 0.004, y * 0.9) * 0.35 + N.n2(x * 0.02, y * 2.5) * 0.12;
+    const u = (x / W) * 0.35 + (y / H) * 0.65;               // diagonal highlight band
+    const band = Math.exp(-Math.pow((u - 0.42) / 0.16, 2)) * 0.55 + Math.exp(-Math.pow((u - 0.8) / 0.08, 2)) * 0.18;
+    const v = 0.36 + band + streak * 0.16 + N.fbm(x / 400, y / 400, 2) * 0.08;
+    put(x, y, col(v));
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+function marble() {
+  const N = makeNoise(9);
+  const bg = ramp([[0, '#e4e8ea'], [0.5, '#f1f3f3'], [1, '#fbfbfa']]);
+  const grey = hex('#7f8c97'), gold = hex('#b8963f');
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const sx = x / W, sy = y / H;
+    const cloud = N.fbm(sx * 3, sy * 3, 5);
+    const w1 = N.fbm(sx * 2.2 + 11, sy * 2.2, 6) * 3.2;
+    const v1 = Math.abs(Math.sin((sx * 1.1 + sy * 0.7) * Math.PI * 3.2 + w1));
+    const vein = Math.pow(1 - v1, 26);                         // main veins
+    const w2 = N.fbm(sx * 5 + 3, sy * 5 + 7, 5) * 4;
+    const v2 = Math.abs(Math.sin((sx * 0.4 - sy * 1.2) * Math.PI * 6 + w2));
+    const fine = Math.pow(1 - v2, 60) * 0.55;                  // hairline veins
+    let c = bg(0.62 + cloud * 0.5);
+    const g = Math.min(1, vein * 0.75 + fine * 0.6);
+    const tint = N.n2(sx * 4, sy * 4) > 0.18 ? gold : grey;  // an occasional warm, gold-leaf vein
+    c = [c[0] + (tint[0] - c[0]) * g, c[1] + (tint[1] - c[1]) * g, c[2] + (tint[2] - c[2]) * g];
+    put(x, y, c);
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+async function emboss() {
+  const N = makeNoise(13);
+  // height map: the capsule mark, blurred
+  const d = await (await fetch('capsule.json')).json();
+  const hc = document.createElement('canvas'); hc.width = W; hc.height = H;
+  const h = hc.getContext('2d');
+  h.fillStyle = '#000'; h.fillRect(0, 0, W, H);
+  const S = W * +(q.get('scale') || 0.5), cx = W / 2, cy = H * +(q.get('cy') || 0.5);
+  const path = pts => { h.moveTo(cx + pts[0][0] * S, cy - pts[0][1] * S); for (const p of pts) h.lineTo(cx + p[0] * S, cy - p[1] * S); h.closePath(); };
+  h.filter = `blur(${Math.max(2, W / 260)}px)`;
+  h.fillStyle = '#fff'; h.beginPath(); path(d.outer); path(d.inner); h.fill('evenodd');
+  const hd = h.getImageData(0, 0, W, H).data;
+  const ht = (x, y) => hd[((Math.min(H - 1, Math.max(0, y)) * W) + Math.min(W - 1, Math.max(0, x))) * 4] / 255;
+  const paper = ramp([[0, '#ebe8e1'], [0.5, '#f5f3ee'], [1, '#fcfbf8']]);
+  const L = [-0.55, -0.62, 0.56]; const ll = Math.hypot(...L); L[0] /= ll; L[1] /= ll; L[2] /= ll;
+  const k = +(q.get('depth') || 3.2);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const dx = (ht(x + 1, y) - ht(x - 1, y)) * k, dy = (ht(x, y + 1) - ht(x, y - 1)) * k;
+    const nl = Math.hypot(dx, dy, 1);
+    const shade = ((-dx * L[0] - dy * L[1] + L[2]) / nl) - L[2];
+    const grain = N.n2(x * 0.8, y * 0.8) * 0.05 + N.n2(x * 0.08, y * 0.5) * 0.04 + N.fbm(x / 300, y / 300, 3) * 0.12;
+    let c = paper(0.62 + grain + (1 - y / H) * 0.12);
+    const s = shade * 150;
+    c = [c[0] + s, c[1] + s * 0.99, c[2] + s * 0.97];
+    put(x, y, c);
+  }
+  ctx.putImageData(img, 0, 0);
+}
+
+await ({ twill, brass, marble, emboss })[T]();
+window.__done = true;
+</script>
+</body>
+</html>

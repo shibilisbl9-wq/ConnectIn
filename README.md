@@ -9,4 +9,5 @@ Brand design system for ConnectIn Business Services' Instagram feed.
 - `brand/assets/Logos/`: official logo (as supplied) and a derived reversed version for navy
 - `brand/fonts/`: Urbanist variable fonts (SIL OFL 1.1)
 - `brand/samples/`: three template posts at 1080 x 1350 (HTML and PNG)
+- `brand/moodboard/`: the brand moodboard and an imagery-direction board (PNG and HTML), with the scripts that render them
 - `content/2026-10/`: October 2026 Instagram plan, captions and 55 rendered slides (see its README)
