@@ -42,6 +42,7 @@ bash render_all.sh                 # stills and materials into ../img/, then bot
 ```
 
 - `scene.html?s=capsule|chess|towers|paper` renders the four stills. They share one studio environment, and query parameters set the camera and lights. `render_all.sh` has the exact values used.
+- `scene.html?s=registered` renders the brass ® for `content/trademark-registration` from `brand/fonts/Urbanist-ExtraBold.ttf`. The command is in that folder's README.
 - `textures.html?t=twill|brass|marble|emboss` renders the four materials.
 - `capsule.json` is the capsule outline traced from `assets/Logos/connectin-logo.png`, normalised to a width of 1.
 - Rendering is deterministic: the same inputs produce the same files byte for byte.
